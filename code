@@ -1,0 +1,53 @@
+'''
+import pyttsx3
+import openai
+import speech_recognition as sr
+
+openai.api_key = "edit your openai api key"
+
+engine = pyttsx3.init()
+voices = engine.getProperty('voices')
+engine.setProperty('voices', voices[1].id)
+
+Recognizer = sr.Recognizer()
+Microphone = sr.Microphone(device_index=1)
+
+conversation = ""
+user_name = "nour"
+bot_name = "chat"
+
+while True:
+    with Microphone as source:
+        print("\n Listening...")
+        Recognizer.adjust_for_ambient_noise(source, duration=0.2)
+        audio = Recognizer.listen(source)
+    print("no longer listening")
+
+    try:
+        user_input = Recognizer.recognize_google(audio)
+    except:
+        continue
+
+    prompt = user_name+":"+user_input + "\n"+bot_name+":"
+    conversation += prompt
+
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=conversation,
+        temperature=0.7,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    response_str = response["choices"][0]["text"].replace("\n", "")
+    response_str =response_str.split(
+        user_name + ":" ,1)[0].split(bot_name+ ":",1)[0]
+
+    conversation+= response_str +"\n"
+    print(response_str)
+
+    engine.say(response_str)
+    engine.runAndWait()
+    '''
