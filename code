@@ -6,6 +6,9 @@ import speech_recognition as sr
 openai.api_key = "edit your openai api key"
 
 engine = pyttsx3.init()
+engine.setProperty('rate', 120) 
+engine.setProperty('pitch', 100) 
+engine.setProperty('volume', 1.0)
 voices = engine.getProperty('voices')
 engine.setProperty('voices', voices[1].id)
 
@@ -21,7 +24,7 @@ while True:
         print("\n Listening...")
         Recognizer.adjust_for_ambient_noise(source, duration=0.2)
         audio = Recognizer.listen(source)
-    print("no longer listening")
+        print("no longer listening")
 
     try:
         user_input = Recognizer.recognize_google(audio)
